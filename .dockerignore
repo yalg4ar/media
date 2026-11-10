@@ -1,0 +1,7 @@
+node_modules
+downloads
+ffmpeg.exe
+*.bat
+.git
+.gitignore
+*.log

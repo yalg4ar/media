@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediaGrab — Download Any Video or Music</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="18" fill="url(#grad1)"/>
+          <path d="M12 10l12 8-12 8V10z" fill="white"/>
+          <defs>
+            <linearGradient id="grad1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6366f1"/>
+              <stop offset="1" stop-color="#a855f7"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>MediaGrab</span>
+      </div>
+      <div class="header-badges">
+        <span class="badge">1000+ Sites</span>
+        <span class="badge">Free</span>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Download Any Video<br/><span class="gradient-text">or Music</span></h1>
+      <p class="subtitle">Paste a URL from YouTube, TikTok, Twitter/X, Instagram, Spotify, SoundCloud, Vimeo, Facebook, and 1000+ other platforms.</p>
+    </section>
+
+    <!-- Input Card -->
+    <div class="card input-card">
+      <div class="url-row">
+        <div class="url-input-wrap">
+          <svg class="url-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+          </svg>
+          <input id="urlInput" type="url" placeholder="Paste video or music URL here..." autocomplete="off" spellcheck="false" />
+          <button id="clearBtn" class="clear-btn" title="Clear" style="display:none">✕</button>
+        </div>
+        <button id="fetchBtn" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Analyze
+        </button>
+      </div>
+
+      <!-- Supported Platforms -->
+      <div class="platforms">
+        <span class="platforms-label">Popular platforms:</span>
+        <div class="platform-chips">
+          <span class="chip" data-url="">▶ YouTube</span>
+          <span class="chip">🎵 TikTok</span>
+          <span class="chip">🐦 Twitter/X</span>
+          <span class="chip">📸 Instagram</span>
+          <span class="chip">🎧 SoundCloud</span>
+          <span class="chip">🎬 Vimeo</span>
+          <span class="chip">📘 Facebook</span>
+          <span class="chip">🎮 Twitch</span>
+          <span class="chip chip-more">+1000 more</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error banner -->
+    <div id="errorBanner" class="error-banner" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span id="errorMsg"></span>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loadingCard" class="card loading-card" style="display:none">
+      <div class="spinner"></div>
+      <p>Fetching media info…</p>
+    </div>
+
+    <!-- Media Info Card -->
+    <div id="infoCard" class="card info-card" style="display:none">
+      <div class="media-preview">
+        <div class="thumb-wrap">
+          <img id="thumbnail" src="" alt="Thumbnail" />
+          <span id="duration" class="duration-badge"></span>
+        </div>
+        <div class="media-meta">
+          <span id="platform-badge" class="platform-badge"></span>
+          <h2 id="mediaTitle"></h2>
+          <p id="mediaUploader" class="uploader"></p>
+        </div>
+      </div>
+
+      <!-- Download Options -->
+      <div class="download-options">
+        <h3>Choose Download Format</h3>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button class="quick-btn active" id="quickBest" data-type="video" data-format="bestvideo+bestaudio/best">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+            </svg>
+            <span class="qbtn-label">Best Video</span>
+            <span class="qbtn-sub">MP4 · Highest Quality</span>
+          </button>
+          <button class="quick-btn" id="quickAudio" data-type="audio">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+              <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+            </svg>
+            <span class="qbtn-label">Audio Only</span>
+            <span class="qbtn-sub">MP3 · Best Quality</span>
+          </button>
+          <button class="quick-btn" id="quick720" data-type="video" data-format="bestvideo[height<=720]+bestaudio/best[height<=720]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+              <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+            </svg>
+            <span class="qbtn-label">720p Video</span>
+            <span class="qbtn-sub">MP4 · Balanced</span>
+          </button>
+        </div>
+
+        <!-- Advanced formats toggle -->
+        <button id="advancedToggle" class="advanced-toggle">
+          Show all formats
+          <svg id="advChevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <div id="formatsPanel" class="formats-panel" style="display:none">
+          <table class="formats-table">
+            <thead><tr><th>Format</th><th>Ext</th><th>Resolution</th><th>Type</th><th>Size</th><th></th></tr></thead>
+            <tbody id="formatsBody"></tbody>
+          </table>
+        </div>
+
+        <button id="downloadBtn" class="btn btn-download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Card -->
+    <div id="progressCard" class="card progress-card" style="display:none">
+      <div class="progress-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <div>
+          <strong id="progressTitle">Downloading…</strong>
+          <p id="progressSub" class="progress-sub">Please wait</p>
+        </div>
+      </div>
+      <div class="progress-bar-track">
+        <div id="progressBar" class="progress-bar-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-pct" id="progressPct">0%</div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features">
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h4>Lightning Fast</h4>
+        <p>Powered by yt-dlp — the fastest and most reliable downloader engine.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🌐</div>
+        <h4>1000+ Sites</h4>
+        <p>YouTube, TikTok, Twitter, Instagram, Vimeo, Dailymotion, SoundCloud & more.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎵</div>
+        <h4>Audio Extraction</h4>
+        <p>Extract high-quality MP3 audio from any video with one click.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <h4>No Sign-up</h4>
+        <p>No account needed. Just paste, click, and download.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>MediaGrab &mdash; Use responsibly and respect copyright laws &amp; platform ToS.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
